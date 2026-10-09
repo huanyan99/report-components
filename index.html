@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>汇报组件库</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/bundle.css">
+<style>
+  body { margin: 0; background: var(--bg-page); }
+  .demo-head { max-width: 960px; margin: 0 auto; padding: 48px 32px 8px; }
+  .demo-toolbar { display: flex; gap: 8px; margin-top: 16px; }
+  .demo-toolbar button { font: inherit; font-size: 14px; padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-secondary); cursor: pointer; }
+  .demo-toolbar button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .demo-list { max-width: 960px; margin: 0 auto; padding: 0 32px 64px; display: flex; flex-direction: column; gap: 40px; }
+  .demo-item > .demo-meta { margin-bottom: 12px; }
+  .demo-name { font-size: 17px; font-weight: 600; }
+  .demo-name small { font-size: 13px; font-weight: 400; color: var(--text-tertiary); margin-left: 8px; }
+  .demo-body { display: flex; flex-direction: column; gap: 16px; }
+  .demo-head { padding-bottom: 32px !important; }
+  .demo-sum { font-size: 14px; color: var(--text-tertiary); }
+  @media (max-width: 600px) { .demo-head, .demo-list { padding-left: 16px; padding-right: 16px; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="components/bundle.js"></script>
+<script>
+  var H = window.Huibao, D = React, h = React.createElement;
+  function Demo(p) {
+    return h('section', {className: 'demo-item'},
+      h('div', {className: 'demo-meta hb-root'},
+        h('div', {className: 'demo-name'}, p.name, h('small', null, p.group)),
+        h('div', {className: 'demo-sum'}, p.summary)),
+      h('div', {className: 'demo-body'}, p.children));
+  }
+  function App() {
+    var s = React.useState('comfortable'), density = s[0], set = s[1];
+    return h('div', null,
+      h('header', {className: 'demo-head hb-root'},
+        h('div', {className: 'hb-eyebrow'}, '设计系统 · 第一版'),
+        h('h1', {className: 'hb-display'}, '汇报组件库'),
+        h('p', {className: 'hb-report-desc'}, 'Apple 的精致视觉 + 飞书的清晰排版。23 个组件，自由组合。'),
+        h('div', {className: 'demo-toolbar', role: 'group', 'aria-label': '密度'},
+          h('button', {'aria-pressed': density === 'comfortable', onClick: function(){ set('comfortable'); }}, '舒适'),
+          h('button', {'aria-pressed': density === 'compact', onClick: function(){ set('compact'); }}, '紧凑'))),
+      h('div', {className: 'demo-list hb-root' + (density === 'compact' ? ' hb-compact' : '')},
+  h(Demo, {group:'文字', name:'Heading', summary:'建立内容层级的标题，分三级，可带一行说明。'}, h(D.Fragment, null,
+  h(H.Heading, {level:1, eyebrow:'第一部分', description:'数据截至 9 月 30 日'}, '整体进展'),
+  h(H.Heading, {level:2}, '网络工程进度'),
+  h(H.Heading, {level:3, description:'按负责人分组'}, '本周完成事项'))),
+  h(Demo, {group:'文字', name:'Text', summary:'正文段落，三种变体：body（默认，16px 主色）、secondary（16px 次色，用于背景性描述）、caption（14px，用于数据来源、注释）。'}, h(D.Fragment, null,
+  h(H.Text, null, '本月完成核心交换机和汇聚层部署，整体进度 78%，与计划基本一致。'),
+  h(H.Text, {variant:'secondary'}, '剩余工作集中在弱电间的末端点位，受土建交付影响，预计延后一周。'),
+  h(H.Text, {variant:'caption'}, '注：进度按已验收点位计算，不含在途设备。'))),
+  h(Demo, {group:'重点', name:'Conclusion', summary:'一段汇报最核心的判断，放在该部分开头。'}, h(D.Fragment, null,
+  h(H.Conclusion, {emphasis:'strong', title:'整体进度可控，有两项需要跨部门协调', points:['核心网络部署完成 78%，与计划持平','弱电间交付延后，影响末端点位约一周','建议本周内与土建方确认交付日期']}),
+  h(H.Conclusion, {label:'建议', title:'先上线一期监控，二期随末端点位同步推进'}))),
+  h(Demo, {group:'重点', name:'Callout', summary:'需要读者注意的一条信息，按含义选色调：info（蓝，补充说明）、success（绿，好消息）、warning（橙，有风险）、danger（红，已出问题）。'}, h(D.Fragment, null,
+  h(H.Callout, {tone:'info', title:'口径说明'}, '本页「完成」指已通过验收，不含已安装待测试的点位。'),
+  h(H.Callout, {tone:'warning', title:'弱电间交付可能延后'}, '土建方反馈 3 号楼弱电间预计 10 月 20 日交付，比计划晚 7 天。'),
+  h(H.Callout, {tone:'danger', title:'光缆采购受阻：供应商暂停发货'}))),
+  h(Demo, {group:'重点', name:'Quote', summary:'引用领导批示、客户原话、会议决议或文件条款。'}, h(H.Quote, {source:'项目周例会决议，10 月 8 日'}, '一期以监控和办公网先行上线，生产网待设备到货后再割接。')),
+  h(Demo, {group:'数据', name:'MetricCard', summary:'一个关键数字：名称、数值、单位、变化、说明。通常 2–4 个放进 Grid。'}, h(H.Grid, {columns:3},
+  h(H.MetricCard, {label:'整体进度', value:'78', unit:'%', delta:6, deltaLabel:'较上周', emphasis:'strong'}),
+  h(H.MetricCard, {label:'已验收点位', value:'1,286', unit:'个', delta:12.4, deltaLabel:'较上月'}),
+  h(H.MetricCard, {label:'未关闭故障', value:'7', unit:'项', delta:-3, deltaSuffix:'项', goodWhen:'down', deltaLabel:'较上周', description:'其中 2 项为高优先级'}))),
+  h(Demo, {group:'数据', name:'Delta', summary:'数值变化：箭头 + 带符号的数值 + 对比口径。'}, h('div', {style:{display:'flex', flexDirection:'column', gap:8}},
+  h(H.Delta, {value:12.4, label:'较上月'}),
+  h(H.Delta, {value:-3, suffix:'项', goodWhen:'down', label:'故障数，较上周'}),
+  h(H.Delta, {value:-5.2, label:'满意度，较上季度'}),
+  h(H.Delta, {value:0, label:'持平'}))),
+  h(Demo, {group:'数据', name:'Progress', summary:'完成程度。value（默认满分 100，可设 max）、label、description。'}, h('div', {style:{display:'flex', flexDirection:'column', gap:20}},
+  h(H.Progress, {label:'核心网络部署', value:100, tone:'success', valueText:'已完成'}),
+  h(H.Progress, {label:'末端点位安装', value:62, description:'剩余 3 号楼，受弱电间交付影响'}),
+  h(H.Progress, {label:'光缆敷设', value:35, max:100, tone:'warning', valueText:'14 / 40 km'}))),
+  h(Demo, {group:'事项', name:'StatusTag', summary:'事项的状态。全库只有五种状态，含义固定：'}, h('div', {style:{display:'flex', flexWrap:'wrap', gap:8}},
+  h(H.StatusTag, {status:'done'}), h(H.StatusTag, {status:'doing'}), h(H.StatusTag, {status:'risk'}),
+  h(H.StatusTag, {status:'blocked'}), h(H.StatusTag, {status:'todo'}), h(H.StatusTag, {status:'done'}, '已上线'))),
+  h(Demo, {group:'事项', name:'TaskItem', summary:'一条工作：标题、说明、负责人、时间、状态。'}, h(H.Section, {variant:'card', layout:'list'},
+  h(H.TaskItem, {title:'核心交换机上架与调试', description:'双机热备已测试通过', owner:'王工', due:'9 月 28 日', status:'done'}),
+  h(H.TaskItem, {title:'办公区无线覆盖', description:'2 号楼已完成，1 号楼剩 3 层', owner:'李工', due:'10 月 15 日', status:'doing'}),
+  h(H.TaskItem, {title:'3 号楼弱电间布线', description:'等待土建交付', owner:'张工', due:'10 月 20 日', status:'risk'}))),
+  h(Demo, {group:'事项', name:'Checklist', summary:'验收项、上线前检查、会议待办。标题右侧自动统计「已完成 / 总数」。'}, h(H.Checklist, {title:'一期上线检查', items:[
+  {text:'核心设备双机切换测试', done:true},
+  {text:'出口防火墙策略评审', done:true, note:'信息安全部 10 月 8 日确认'},
+  {text:'监控平台告警联调', done:false},
+  {text:'用户网络接入手册发布', done:false}]})),
+  h(Demo, {group:'分析', name:'CompareTable', summary:'多个方案或对象在同一组维度上的对比。'}, h(H.CompareTable, {columns:['对比项','方案 A：自建机房','方案 B：托管机房','方案 C：混合部署'], highlight:2, rows:[
+  {label:'一次性投入', values:['约 320 万','约 60 万','约 150 万']},
+  {label:'年运维成本', values:['45 万','80 万','58 万']},
+  {label:'上线周期', values:['6 个月','1 个月','3 个月']},
+  {label:'扩展性', values:['受场地限制','好','好，核心数据本地']}]})),
+  h(Demo, {group:'分析', name:'BeforeAfter', summary:'改进前后、调整前后的状态对照。左侧灰底为「之前」，右侧浅蓝底为「之后」，中间箭头。'}, h(H.BeforeAfter, {
+  before:{label:'优化前', title:'故障平均处理 4.5 小时', items:['人工逐台登录排查','告警分散在 3 个系统']},
+  after:{label:'优化后', title:'故障平均处理 1.2 小时', items:['拓扑自动定位故障点','告警统一推送到值班群']}})),
+  h(Demo, {group:'分析', name:'IssueMeasure', summary:'问题、对应措施、处理状态，一行一个问题。'}, h(H.IssueMeasure, {items:[
+  {issue:'3 号楼弱电间延期交付', cause:'土建工序调整', measure:'与土建方确认交付日期，先完成 1、2 号楼', owner:'张工', due:'10 月 12 日', status:'doing'},
+  {issue:'光缆供应商暂停发货', measure:'启动备选供应商比价，周五前定标', owner:'采购部', status:'blocked'},
+  {issue:'部分 AP 信号覆盖不足', measure:'已补点 6 个，复测达标', owner:'李工', status:'done'}]})),
+  h(Demo, {group:'时间', name:'Timeline', summary:'按时间排列的过程：左侧时间、中间节点、右侧事件。'}, h(H.Timeline, {items:[
+  {time:'9 月 2 日', title:'项目启动', description:'完成需求确认和点位勘察', status:'done'},
+  {time:'9 月 28 日', title:'核心网络上线', description:'核心与汇聚层设备调试完成', status:'done'},
+  {time:'10 月 15 日', title:'办公区无线覆盖', description:'1 号楼剩余 3 层施工中', status:'doing'},
+  {time:'10 月 30 日', title:'一期整体验收', status:'todo'}]})),
+  h(Demo, {group:'时间', name:'Milestone', summary:'横向的关键节点，一眼看出走到了哪一步。'}, h(H.Milestone, {items:[
+  {date:'9 月 2 日', title:'启动', status:'done'},
+  {date:'9 月 28 日', title:'核心上线', status:'done'},
+  {date:'10 月 15 日', title:'无线覆盖', status:'doing'},
+  {date:'10 月 30 日', title:'一期验收', status:'todo'},
+  {date:'12 月', title:'二期割接', status:'todo'}]})),
+  h(Demo, {group:'展示', name:'Figure', summary:'截图、现场照片、图表图片，附说明和来源。'}, h(H.Figure, {src:"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'><rect width='640' height='360' fill='%23ffffff'/><rect x='0' y='0' width='640' height='40' fill='%23f2f3f5'/><circle cx='22' cy='20' r='5' fill='%23d0d3d9'/><circle cx='40' cy='20' r='5' fill='%23d0d3d9'/><circle cx='58' cy='20' r='5' fill='%23d0d3d9'/><rect x='32' y='72' width='180' height='88' rx='10' fill='%23e8f1fc'/><rect x='230' y='72' width='180' height='88' rx='10' fill='%23f2f3f5'/><rect x='428' y='72' width='180' height='88' rx='10' fill='%23f2f3f5'/><polyline points='40,320 120,280 200,296 280,240 360,256 440,208 520,224 600,180' fill='none' stroke='%230066cc' stroke-width='4' stroke-linejoin='round'/><line x1='32' y1='330' x2='608' y2='330' stroke='%23e5e6eb' stroke-width='2'/></svg>", alt:'监控平台首页截图：三张指标卡和一条上升的流量曲线', caption:'监控平台一期上线后首页，流量曲线已接入', source:'截图于 10 月 8 日'})),
+  h(Demo, {group:'展示', name:'Achievement', summary:'一项成果：名称、核心数字、说明、标签，可带配图（media）。'}, h(H.Grid, {columns:2},
+  h(H.Achievement, {emphasis:'strong', label:'季度重点成果', title:'故障处理效率提升', highlight:'平均时长缩短 73%', description:'从 4.5 小时降到 1.2 小时，依靠拓扑自动定位和告警统一推送。', tags:['运维','网络平台']}),
+  h(H.Achievement, {title:'一期网络上线', highlight:'1,286 个点位', description:'覆盖 1、2 号楼全部办公区与机房。', tags:['湖州项目']}))),
+  h(Demo, {group:'组织', name:'Section', summary:'把相关内容放在一个标题下。'}, h(H.Section, {variant:'card', title:'本周进展', description:'网络工程组', extra:'更新于 10 月 8 日'},
+  h(H.Progress, {label:'末端点位安装', value:62}),
+  h(H.Callout, {tone:'warning', title:'3 号楼弱电间预计延后 7 天'}))),
+  h(Demo, {group:'组织', name:'Grid', summary:'把同类组件并排：指标卡、成果卡、图片。'}, h(H.Grid, {columns:4},
+  h(H.MetricCard, {label:'在线设备', value:'342'}),
+  h(H.MetricCard, {label:'可用率', value:'99.97', unit:'%'}),
+  h(H.MetricCard, {label:'告警', value:'12'}),
+  h(H.MetricCard, {label:'工单', value:'5'}))),
+  h(Demo, {group:'组织', name:'Divider', summary:'1px 细线，用来在同一分组内切开两段内容。传 label 时线中间显示小字（如「以下为附录」）。'}, h('div', {style:{display:'flex', flexDirection:'column', gap:20}},
+  h(H.Text, {variant:'secondary'}, '以上为本月重点工作。'),
+  h(H.Divider, null),
+  h(H.Divider, {label:'以下为附录'}))),
+  h(Demo, {group:'组织', name:'Collapse', summary:'把明细、附录、原始数据收起来，主线内容保持精简。基于原生 <details>，键盘可操作。'}, h('div', {style:{display:'flex', flexDirection:'column', gap:12}},
+  h(H.Collapse, {title:'点位明细', summary:'共 1,286 个，按楼栋统计', defaultOpen:true},
+    h(H.Text, {variant:'secondary'}, '1 号楼 512 个，2 号楼 498 个，3 号楼 276 个（待交付）。')),
+  h(H.Collapse, {title:'附录：设备清单', summary:'核心 2 台、汇聚 8 台、接入 64 台'}, h(H.Text, {variant:'secondary'}, '详见附件。')))),
+  h(Demo, {group:'组织', name:'Report', summary:'整份汇报的根容器：页面底色、外边距、总标题，以及**密度**。'}, h(H.Report, {density:'compact', eyebrow:'2026 年 10 月 · 网络工程组', title:'湖州项目月度汇报'},
+  h(H.Conclusion, {emphasis:'strong', title:'整体进度可控，弱电间交付需协调', points:['核心网络已上线，整体进度 78%','3 号楼弱电间预计延后 7 天']}),
+  h(H.Grid, {columns:3},
+    h(H.MetricCard, {label:'整体进度', value:'78', unit:'%', delta:6, deltaLabel:'较上月'}),
+    h(H.MetricCard, {label:'已验收点位', value:'1,286', delta:12.4, deltaLabel:'较上月'}),
+    h(H.MetricCard, {label:'未关闭故障', value:'7', delta:-3, deltaSuffix:'项', goodWhen:'down', deltaLabel:'较上周'})),
+  h(H.Section, {variant:'card', title:'关键节点'},
+    h(H.Milestone, {items:[{date:'9 月 2 日', title:'启动', status:'done'},{date:'9 月 28 日', title:'核心上线', status:'done'},{date:'10 月 15 日', title:'无线覆盖', status:'doing'},{date:'10 月 30 日', title:'一期验收', status:'todo'}]}))))
+      ));
+  }
+  ReactDOM.createRoot(document.getElementById('app')).render(h(App));
+</script>
+</body>
+</html>
